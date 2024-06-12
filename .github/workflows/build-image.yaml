@@ -1,0 +1,44 @@
+name: Build and release image
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        uses: CommonArch/image-builder@v0.1.0-alpha
+
+      - name: Upload built image
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-iso
+          path: ${{ github.workspace }}/image.squashfs
+
+      - name: Create tag
+        id: create_tag
+        run: |
+          export TAG=$(date +%Y.%m.%d)
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          echo $TAG
+
+      - name: Release image
+        uses: softprops/action-gh-release@v2
+        with:
+           files: |
+             ${{ github.workspace }}/image.squashfs
+           tag_name: ${{ steps.create_tag.outputs.tag }}
+           name: blendOS-${{ steps.create_tag.outputs.tag }} - Release
+           draft: ${{ contains(github.event.head_commit.message, '[draft]') }}
+           prerelease: ${{ !contains(github.event.head_commit.message, '[draft]') }}
+        env:
+           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
