@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build image
-        uses: CommonArch/image-builder@v0.1.0-alpha
+        uses: CommonArch/image-builder@v0.1.1-alpha
 
       - name: Upload built image
         uses: actions/upload-artifact@v4
