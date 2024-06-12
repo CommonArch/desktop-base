@@ -1,0 +1,11 @@
+id: 'desktop-base'
+
+pkgbuilds-dir: 'pkgbuilds'
+
+base-image: 'none'
+
+repos:
+  - name: 'core'
+    url: 'https://archive.archlinux.org/repos/2024/06/10/core/os/$arch'
+  - name: 'extra'
+    url: 'https://archive.archlinux.org/repos/2024/06/10/extra/os/$arch'
